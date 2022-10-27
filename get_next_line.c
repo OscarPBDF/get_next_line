@@ -6,102 +6,145 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 16:52:43 by operez-d          #+#    #+#             */
-/*   Updated: 2022/10/24 11:54:00 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/10/27 18:01:26 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
-static char	*fill_line(char *buffer, char *line)
+static char	*append_line(char *buffer, char *line)
 {
-	int	i;
-
+	int		i;
+	int		pre_len;
+	char	*aux;
+	
 	i = 0;
-	while (buffer[i] != '\0' && buffer[i] != '\n')
+	pre_len = 0;
+	aux = NULL;
+	while ((buffer[i] != '\0' && buffer[i] != '\n'))//
 		i++;
-	line = ft_calloc(i + 2, sizeof(char));
-	i = 0;
-	while (buffer[i] != '\0' && buffer[i] != '\n')
+	if(line)
 	{
-		line[i] = buffer[i];
+		pre_len = ft_strlen(line);
+		aux = line;
+	}
+	//printf("############%s\n",line);
+	line = ft_strjoin(line, buffer);
+	//printf("############%s\n",line);
+	if (!line)
+	{
+		if(aux)
+			free(aux);
+		return (NULL);
+	}
+	i = 0;
+	while ((buffer[i] != '\0' && buffer[i] != '\n'))
+	{
+		line[pre_len] = buffer[i];
 		i++;
+		pre_len++;
 	}
 	if (buffer[i] == '\n')
-		line[i++] = '\n';
-	line[i] = 0;
+		line[pre_len++] = '\n';
+	line[pre_len] = 0;
+	if(aux)
+		free(aux);
+	printf("---%s\n",line);
 	return (line);
 }
-
+/*
 static char	*next_buffer(char *buffer)
 {
-	char	*aux;
+	char	*new_buffer;
 	int		i;
 	int		j;
 
 	i = 0;
-	while (buffer[i] != '\0' && buffer[i] != '\n')
+	while ((buffer[i] != '\0' && buffer[i] != '\n') || j <= BUFFER_SIZE)
 		i++;
-	aux = ft_calloc(i + 1, sizeof(char));
+	new_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!new_buffer)
+		return (NULL);
 	if (buffer[i] == '\n')
 		i++;
 	if (buffer[i] == '\0')
 		return (NULL);
 	j = 0;
-	while (buffer[i] != '\0')
+	while (buffer[i] != '\0' || j <= BUFFER_SIZE)
 	{
-		aux[j] = buffer[i];
+		new_buffer[j] = buffer[i];
 		j++;
 		i++;
 	}
-	return (aux);
+	free(buffer);
+	return (new_buffer);
 }
-
-char	*ft_read(int fd, char *buffer)
+*/
+static char	*ft_read(int fd, char *buffer)
 {
-	char	*aux;
-	size_t	bytes;
-
-	aux = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!aux)
-		return (NULL);
-	bytes = 1;
-	while (bytes > 0)
+	int	bytes;
+	
+	if(!buffer)
 	{
-		bytes = read(fd, aux, BUFFER_SIZE);
-		if (bytes == -1)
-		{
-			free(aux);
+		buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		if (!buffer)
 			return (NULL);
-		}
-		aux[bytes] = 0;
-		buffer = ft_strjoin(buffer, aux);
 	}
-	free(aux);
+	bytes = read(fd, buffer, BUFFER_SIZE);
+	if(bytes < 1)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	if(bytes < BUFFER_SIZE)
+		buffer[bytes] = 0;
+	else
+		buffer[BUFFER_SIZE] = 0;
 	return (buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	static char		*buffer;
+	static char		*buffer = NULL;
 	char			*line;
-
+	
+	line = NULL;
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	if (!buffer)
-		buffer = ft_calloc(1, 1);
-	buffer = ft_read(fd, buffer);
-	line = fill_line(buffer, line);
-	buffer = next_buffer(buffer);
+		//Error al no encontrar end file
+	while (!line || !(ft_strchr(line, '\n')))
+	{
+		if(buffer)//##################
+			if(ft_strchr(buffer, '\n'))
+				buffer = ft_strchr(buffer, '\n') + 1;
+		if (!buffer || !*buffer || ft_strlen(buffer) == BUFFER_SIZE)
+		{
+			buffer = ft_read(fd, buffer);
+			if (!buffer)
+				return (NULL);
+		}
+		line = append_line(buffer, line);
+	}
+	//buffer = next_buffer(buffer);
 	return (line);
 }
 
-#include <stdio.h>
+
 int	main()
 {
-	int	fd;
+	int		fd;
+	char	*line;
 
-	fd = open("./mifichero.txt", O_RDONLY);
-	printf("%s",get_next_line(fd));
-	printf("%s",get_next_line(fd));
-	close(fd);
+	fd = open("./pruebas.txt", O_RDONLY);
+	//fd = open("./mifichero.txt", O_RDONLY);
+	line = get_next_line(fd);
+	printf("%s",line);
+	free(line);
+	
+	/*line = get_next_line(fd);
+	printf("%s",line);
+	free(line);
+	close(fd);*/
+	//system("leaks -q a.out");
 }

@@ -6,7 +6,7 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 11:42:02 by operez-d          #+#    #+#             */
-/*   Updated: 2022/10/24 11:56:42 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/10/26 12:23:04 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 char	*get_next_line(int fd);
 void	*ft_calloc(size_t count, size_t size);
-void	ft_bzero(void *s, size_t n);
+char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);
 char	*ft_strjoin(char *s1, char *s2);
 

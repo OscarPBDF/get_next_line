@@ -6,7 +6,7 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 12:14:18 by operez-d          #+#    #+#             */
-/*   Updated: 2022/10/24 11:41:00 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/10/27 11:58:01 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	void	*str;
+	char	*str;
 	int		n;
+	int		i;
 
 	n = count * size;
 	if (n == 1 && count != 1)
@@ -23,21 +24,14 @@ void	*ft_calloc(size_t count, size_t size)
 	str = malloc(n);
 	if (!(str))
 		return (0);
-	ft_bzero(str, n);
-	return (str);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned char	*a;
-
-	a = s;
+	i = 0;
 	while (n > 0)
 	{
-		*a = 0;
-		a++;
+		str[i] = 0;
+		i++;
 		n--;
 	}
+	return ((void *)str);
 }
 
 size_t	ft_strlen(const char *s)
@@ -50,7 +44,22 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-//IMPORTANTE
+char	*ft_strchr(const char *s, int c)
+{
+	char			*str;
+	unsigned int	i;
+
+	i = 0;
+	str = (char *)s;
+	while (str[i] != (unsigned char)c)
+	{
+		if (str[i] == '\0')
+			return (0);
+		i++;
+	}
+	return (&str[i]);
+}
+
 char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	lens1;
@@ -58,12 +67,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*str;
 	size_t	i;
 
-	if (!s1)
-		s1[0] = 0;
-	if (!s2)
-		return (0);
-	lens1 = ft_strlen((char *)s1);
-	lens2 = ft_strlen((char *)s2);
+	lens1 = 0;
+	lens2 = 0;
+	if (s1)
+		lens1 = ft_strlen(s1);
+	if (s2)
+		lens2 = ft_strlen(s2);
 	str = ft_calloc(sizeof(char), (lens1 + lens2 + 1));
 	if (!str)
 		return (0);
