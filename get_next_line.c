@@ -6,7 +6,7 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 16:52:43 by operez-d          #+#    #+#             */
-/*   Updated: 2022/10/27 18:01:26 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/11/02 17:01:31 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ static char	*append_line(char *buffer, char *line)
 		pre_len = ft_strlen(line);
 		aux = line;
 	}
-	//printf("############%s\n",line);
 	line = ft_strjoin(line, buffer);
-	//printf("############%s\n",line);
 	if (!line)
 	{
 		if(aux)
@@ -46,55 +44,34 @@ static char	*append_line(char *buffer, char *line)
 		pre_len++;
 	}
 	if (buffer[i] == '\n')
+	{
 		line[pre_len++] = '\n';
+		buffer = (char *)ft_memcpy(buffer, &buffer[i + 1], BUFFER_SIZE - i);//##########
+	}
+	else
+		buffer[0] = 0;
 	line[pre_len] = 0;
 	if(aux)
 		free(aux);
-	printf("---%s\n",line);
+	//printf("---%s\n",line);
 	return (line);
 }
-/*
-static char	*next_buffer(char *buffer)
-{
-	char	*new_buffer;
-	int		i;
-	int		j;
 
-	i = 0;
-	while ((buffer[i] != '\0' && buffer[i] != '\n') || j <= BUFFER_SIZE)
-		i++;
-	new_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!new_buffer)
-		return (NULL);
-	if (buffer[i] == '\n')
-		i++;
-	if (buffer[i] == '\0')
-		return (NULL);
-	j = 0;
-	while (buffer[i] != '\0' || j <= BUFFER_SIZE)
-	{
-		new_buffer[j] = buffer[i];
-		j++;
-		i++;
-	}
-	free(buffer);
-	return (new_buffer);
-}
-*/
 static char	*ft_read(int fd, char *buffer)
 {
 	int	bytes;
 	
 	if(!buffer)
 	{
-		buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		buffer = malloc(BUFFER_SIZE + 1 * sizeof(char));//###########
 		if (!buffer)
 			return (NULL);
 	}
 	bytes = read(fd, buffer, BUFFER_SIZE);
 	if(bytes < 1)
 	{
-		free(buffer);
+		if(buffer)
+			free(buffer);
 		return (NULL);
 	}
 	if(bytes < BUFFER_SIZE)
@@ -109,42 +86,47 @@ char	*get_next_line(int fd)
 	static char		*buffer = NULL;
 	char			*line;
 	
+	
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-		//Error al no encontrar end file
+		
+	if(!buffer)
+	{
+		buffer = ft_read(fd, buffer);
+		//printf("++++%s\n",buffer);
+		if (!buffer)
+			return (line);
+	}
 	while (!line || !(ft_strchr(line, '\n')))
 	{
-		if(buffer)//##################
-			if(ft_strchr(buffer, '\n'))
-				buffer = ft_strchr(buffer, '\n') + 1;
-		if (!buffer || !*buffer || ft_strlen(buffer) == BUFFER_SIZE)
+		line = append_line(buffer, line);
+		if (!*buffer)//#############
 		{
 			buffer = ft_read(fd, buffer);
 			if (!buffer)
-				return (NULL);
+				return (line);
 		}
-		line = append_line(buffer, line);
 	}
-	//buffer = next_buffer(buffer);
 	return (line);
 }
 
-
+/*
 int	main()
 {
 	int		fd;
 	char	*line;
 
+	//fd = open("./null.txt", O_RDONLY);
 	fd = open("./pruebas.txt", O_RDONLY);
 	//fd = open("./mifichero.txt", O_RDONLY);
 	line = get_next_line(fd);
-	printf("%s",line);
+	printf("====%s",line);
 	free(line);
 	
-	/*line = get_next_line(fd);
-	printf("%s",line);
+	line = get_next_line(fd);
+	printf("====%s",line);
 	free(line);
-	close(fd);*/
+	close(fd);
 	//system("leaks -q a.out");
-}
+}*/

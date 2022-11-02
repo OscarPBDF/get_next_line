@@ -6,7 +6,7 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 12:14:18 by operez-d          #+#    #+#             */
-/*   Updated: 2022/10/27 11:58:01 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/11/02 11:48:23 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		lens1 = ft_strlen(s1);
 	if (s2)
 		lens2 = ft_strlen(s2);
-	str = ft_calloc(sizeof(char), (lens1 + lens2 + 1));
+	str = malloc(sizeof(char) * (lens1 + lens2 + 1)); //#########
 	if (!str)
 		return (0);
 	i = -1;
@@ -83,4 +83,24 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (++i < lens2)
 		str[lens1++] = s2[i];
 	return (str);
+}
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	unsigned char	*d;
+	unsigned char	*s;
+	size_t			i;
+
+	if (!src && !dest)
+		return (0);
+	d = dest;
+	s = (unsigned char *)src;
+	i = 0;
+	while (n > 0)
+	{
+		d[i] = s[i];
+		i++;
+		n--;
+	}
+	return (dest);
 }
