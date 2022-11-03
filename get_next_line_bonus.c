@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 16:52:43 by operez-d          #+#    #+#             */
-/*   Updated: 2022/11/03 16:34:17 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/11/03 16:36:57 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char *append_line(char *buffer, char *line, int pre_len)
 {
@@ -89,46 +89,61 @@ static char	*ft_read(int fd, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char		*buffer = NULL;
+	static char		*buffer[OPEN_MAX];
 	char			*line;
 
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	if (!buffer)
+	if (!buffer[fd])
 	{
-		buffer = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-		if (!buffer)
+		buffer[fd] = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
+		if (!buffer[fd])
 			return (line);
 	}
 	while (!line || !(ft_strchr(line, '\n')))
 	{
-		if (!*buffer)
+		if (!*buffer[fd])
 		{
-			buffer = ft_read(fd, buffer);
-			if (!buffer)
+			buffer[fd] = ft_read(fd, buffer[fd]);
+			if (!buffer[fd])
 				return (line);
 		}
-		line = join_line(buffer, line);
+		line = join_line(buffer[fd], line);
 	}
 	return (line);
 }
-/*
+
+#include <stdio.h>
 int	main()
 {
-	int		fd;
-	char	*line;
-	
-	//fd = open("./null.txt", O_RDONLY);
-	//fd = open("./mobyDick.txt", O_RDONLY);
-	fd = open("./numeros.txt", O_RDONLY);
-	line = get_next_line(fd);
-	printf("====%s",line);
-	free(line);
-	
-	line = get_next_line(fd);
-	printf("====%s",line);
-	free(line);
-	close(fd);
-	//system("leaks -q a.out");
-}*/
+	char	*temp;
+	int	fd1, fd2, fd3;
+	int i;
+
+	fd1 = open("./mobyDick.txt", O_RDONLY);
+	fd2 = open("./numeros.txt", O_RDONLY);
+	fd3 = open("./null.txt", O_RDONLY);
+	i = 0;
+	while(i < 5)
+	{
+		i++;
+		printf("%d\n",i);
+		temp = get_next_line(fd1);
+		if (!temp)
+		break ;
+		printf("%s", temp);
+		free(temp);
+		
+		temp = get_next_line(fd2);
+		if (!temp)
+		break ;
+		printf("%s", temp);
+		free(temp);
+		
+		temp = get_next_line(fd3);
+		printf("%s\n", temp);
+		free(temp);
+	}
+	return (0);
+}
