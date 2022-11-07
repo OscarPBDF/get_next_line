@@ -6,20 +6,19 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 16:52:43 by operez-d          #+#    #+#             */
-/*   Updated: 2022/11/03 16:34:17 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/11/07 16:20:32 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char *append_line(char *buffer, char *line, int pre_len)
+static char	*mem_line(char *buffer, char *line, int pre_len)
 {
 	int	i;
-	
+
 	i = 0;
 	while ((buffer[i] != '\0' && buffer[i] != '\n'))
 	{
-		line[pre_len] = buffer[i];
 		i++;
 		pre_len++;
 	}
@@ -36,15 +35,11 @@ static char *append_line(char *buffer, char *line, int pre_len)
 
 static char	*join_line(char *buffer, char *line)
 {
-	int		i;
 	int		pre_len;
 	char	*aux;
 
-	i = 0;
 	pre_len = 0;
 	aux = NULL;
-	while ((buffer[i] != '\0' && buffer[i] != '\n'))
-		i++;
 	if (line)
 	{
 		pre_len = ft_strlen(line);
@@ -57,7 +52,7 @@ static char	*join_line(char *buffer, char *line)
 			free(aux);
 		return (NULL);
 	}
-	line = append_line(buffer, line, pre_len);
+	line = mem_line(buffer, line, pre_len);
 	if (aux)
 		free(aux);
 	return (line);
@@ -114,6 +109,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 /*
+#include <stdio.h>
 int	main()
 {
 	int		fd;

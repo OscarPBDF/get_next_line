@@ -5,20 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/24 11:42:02 by operez-d          #+#    #+#             */
-/*   Updated: 2022/11/03 16:01:05 by operez-d         ###   ########.fr       */
+/*   Created: 2022/11/07 16:23:43 by operez-d          #+#    #+#             */
+/*   Updated: 2022/11/07 16:24:20 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
-# include <limits.h>
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdlib.h>
+# include <limits.h>
 
 char	*get_next_line(int fd);
 void	*ft_calloc(size_t count, size_t size);

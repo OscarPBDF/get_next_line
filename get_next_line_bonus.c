@@ -6,16 +6,16 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 16:52:43 by operez-d          #+#    #+#             */
-/*   Updated: 2022/11/03 16:36:57 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/11/07 16:22:47 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char *append_line(char *buffer, char *line, int pre_len)
+static char	*append_line(char *buffer, char *line, int pre_len)
 {
 	int	i;
-	
+
 	i = 0;
 	while ((buffer[i] != '\0' && buffer[i] != '\n'))
 	{
@@ -113,7 +113,7 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-
+/*
 #include <stdio.h>
 int	main()
 {
@@ -146,4 +146,4 @@ int	main()
 		free(temp);
 	}
 	return (0);
-}
+}*/
