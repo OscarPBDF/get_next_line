@@ -6,13 +6,13 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 16:52:43 by operez-d          #+#    #+#             */
-/*   Updated: 2022/11/07 16:22:47 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/11/08 10:24:58 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char	*append_line(char *buffer, char *line, int pre_len)
+static char	*ft_mem_line(char *buffer, char *line, int pre_len)
 {
 	int	i;
 
@@ -34,7 +34,7 @@ static char	*append_line(char *buffer, char *line, int pre_len)
 	return (line);
 }
 
-static char	*join_line(char *buffer, char *line)
+static char	*ft_join_line(char *buffer, char *line)
 {
 	int		i;
 	int		pre_len;
@@ -57,7 +57,7 @@ static char	*join_line(char *buffer, char *line)
 			free(aux);
 		return (NULL);
 	}
-	line = append_line(buffer, line, pre_len);
+	line = ft_mem_line(buffer, line, pre_len);
 	if (aux)
 		free(aux);
 	return (line);
@@ -93,7 +93,7 @@ char	*get_next_line(int fd)
 	char			*line;
 
 	line = NULL;
-	if (fd < 0 || BUFFER_SIZE < 1)
+	if (fd < 0 || BUFFER_SIZE < 1 || fd > OPEN_MAX)
 		return (NULL);
 	if (!buffer[fd])
 	{
@@ -109,41 +109,7 @@ char	*get_next_line(int fd)
 			if (!buffer[fd])
 				return (line);
 		}
-		line = join_line(buffer[fd], line);
+		line = ft_join_line(buffer[fd], line);
 	}
 	return (line);
 }
-/*
-#include <stdio.h>
-int	main()
-{
-	char	*temp;
-	int	fd1, fd2, fd3;
-	int i;
-
-	fd1 = open("./mobyDick.txt", O_RDONLY);
-	fd2 = open("./numeros.txt", O_RDONLY);
-	fd3 = open("./null.txt", O_RDONLY);
-	i = 0;
-	while(i < 5)
-	{
-		i++;
-		printf("%d\n",i);
-		temp = get_next_line(fd1);
-		if (!temp)
-		break ;
-		printf("%s", temp);
-		free(temp);
-		
-		temp = get_next_line(fd2);
-		if (!temp)
-		break ;
-		printf("%s", temp);
-		free(temp);
-		
-		temp = get_next_line(fd3);
-		printf("%s\n", temp);
-		free(temp);
-	}
-	return (0);
-}*/

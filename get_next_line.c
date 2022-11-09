@@ -6,13 +6,13 @@
 /*   By: operez-d <operez-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 16:52:43 by operez-d          #+#    #+#             */
-/*   Updated: 2022/11/07 16:20:32 by operez-d         ###   ########.fr       */
+/*   Updated: 2022/11/08 10:23:27 by operez-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*mem_line(char *buffer, char *line, int pre_len)
+static char	*ft_mem_line(char *buffer, char *line, int pre_len)
 {
 	int	i;
 
@@ -33,7 +33,7 @@ static char	*mem_line(char *buffer, char *line, int pre_len)
 	return (line);
 }
 
-static char	*join_line(char *buffer, char *line)
+static char	*ft_join_line(char *buffer, char *line)
 {
 	int		pre_len;
 	char	*aux;
@@ -52,7 +52,7 @@ static char	*join_line(char *buffer, char *line)
 			free(aux);
 		return (NULL);
 	}
-	line = mem_line(buffer, line, pre_len);
+	line = ft_mem_line(buffer, line, pre_len);
 	if (aux)
 		free(aux);
 	return (line);
@@ -104,27 +104,7 @@ char	*get_next_line(int fd)
 			if (!buffer)
 				return (line);
 		}
-		line = join_line(buffer, line);
+		line = ft_join_line(buffer, line);
 	}
 	return (line);
 }
-/*
-#include <stdio.h>
-int	main()
-{
-	int		fd;
-	char	*line;
-	
-	//fd = open("./null.txt", O_RDONLY);
-	//fd = open("./mobyDick.txt", O_RDONLY);
-	fd = open("./numeros.txt", O_RDONLY);
-	line = get_next_line(fd);
-	printf("====%s",line);
-	free(line);
-	
-	line = get_next_line(fd);
-	printf("====%s",line);
-	free(line);
-	close(fd);
-	//system("leaks -q a.out");
-}*/
